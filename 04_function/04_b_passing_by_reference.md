@@ -24,4 +24,62 @@ std::cout << a << std::endl;   // 11
 
 In this context, & is not the address operator. Instead, it serves as part of the type identifier. int& means its a shadow copy of a int variable.
 
-# passing by a reference to
+# passing by a reference to function
+
+passing by reference allows a clled function to access variables in the calling function. which results from the shadow copy.
+
+~~~
+// swaps.cpp
+#include <iostream>
+
+void swapv(int a, int b);  // passing by value
+void swapr(int& a, int& b); // passing by reference
+
+int main()
+{
+    using namespace std;
+    int wallet1 = 300;
+    int wallet2 = 350;
+    cout << "wallet1 = $" << wallet1;
+    cout << "wallet2 = $" << wallet2;
+
+    cout << "trying to passing by value...";
+    swapv(wallet1, wallet2);            // passing by value
+    cout << "wallet1 = $" << wallet1;   // display 300
+    cout << "wallet2 = $" << wallet2:   // display 350. failed swap
+
+    cout << "passing by reference";
+    swapr(wallet1, wallet2);
+    cout << "wallet1 = $" << wallet1;   // display 350
+    cout << "wallet2 = $" << wallet2;   // display 300 success swap
+    return 0;
+}
+
+void swapr(int a, int b)
+{
+    int temp;
+  
+    temp = a;
+    a = b;
+    b = temp;
+}
+
+void swapr(int& a, int& b)
+{
+    int temp;
+
+    temp = a;
+    a = b;
+    b = temp;
+}
+~~~
+when passing a actual argument to function, the function will do an omitted step. create a reference by assignment:
+~~~
+int& a = wallet1;
+int& b = wallet2;
+~~~
+after creating
+~~~
+a = b; //this assignment statement actually. assign the value of object b to the value attribute of object a. thereby alter the wallet1's value attribute.
+~~~
+
