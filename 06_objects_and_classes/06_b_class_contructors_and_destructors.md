@@ -52,7 +52,8 @@ c++ provide three ways to create (initialize) an object by using a constructor.
     Stock jock{"derivation plus", 100, 45.0};
 
 >how to construct with *new*:
-Stock *pstock = new Stock("Electrshock Games", 18, 19.0)
+Stock *pstock = new Stock("Electrshock Games", 18, 19.0);
+Stock *pc     = new Boze{"pope", 12, 11.2};
 
 ## 1.3 default constructor
 
