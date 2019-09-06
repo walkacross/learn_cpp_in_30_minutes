@@ -6,7 +6,7 @@ there are mainly four ways to initiliza a data object
 |1 默认初始化| int a| 默认构造函数||
 |2 值初始化|int a=int(); vector<int> v1(10)|默认构造函数|值初始化是值使用了初始化器（即使用了圆括号或花括号）但却没有提供初始值的情况|
 |3 直接初始化/拷贝初始化|int a(12); int a = 12;// string s("123456");string s=string("123456")|直接初始化调用类的构造函数（调用参数类型最佳匹配的那个），拷贝初始化调用类的拷贝构造函数||
-|4 列表初始化|int a{12};string s{"123"};vector<int> vec{1,2,3};|||
+|4 列表初始化[直接列表初始化/复制列表初始化]|int a{12};string s{"123"};vector<int> vec{1,2,3};  int a = {12}; string s = {"123"}; vector<int> vec = {1,2,3};|||
 
 #https://blog.csdn.net/qq_34352738/article/details/79274409
 
