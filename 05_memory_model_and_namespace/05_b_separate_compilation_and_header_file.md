@@ -1,6 +1,10 @@
 # 1 why use header file?
+The point of encapsulation is to separate the ​interface ​from ​implementation but still keep them as a cohesive unit.
+* Interface/the API​ - ​what​ is the class supposed to do
+* Implementation​ - ​how​ is the class supposed to do it
+With such separation between interface and implementation, we could update our coding implementation of function without update our interface
 
-the general case, you declare a funtion prototype and define it in one file. this function, by default, is a external linkage function, that means other file can use this function, but they have to referencing decalratin in their file.  think about his situition, when three file want to use this funtion, you have to refernecing declaration three times.  how to avoid this case?
+In C++ convention, normally we put the interface in a file with “.h” extension and the implementation in a file with “.cpp” extension.
 
 the solution:
 step 1: place the function decalration and definition in a separate file. which can be called header file and source code file.
