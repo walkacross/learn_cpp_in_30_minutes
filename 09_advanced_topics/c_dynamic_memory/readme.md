@@ -6,7 +6,7 @@ In the programs seen in previous chapters, all memory needs were determined befo
 
 # operator new and new[]
 Dynamic memory is allocated using operator new. new is followed by a data type specifier and, if a sequence of more than one element is required, the number of these within brackets []. It returns a pointer to the beginning of the new block of memory allocated. Its syntax is::
-
+> https://www.tutorialspoint.com/new-and-delete-operator-in-cplusplus
 ~~~
 pointer = new type
 pointer = new type [number_of_elements]
@@ -52,7 +52,7 @@ foo = new (nothrow) int [5];
 
 In this case, if the allocation of this block of memory fails, the failure can be detected by checking if foo is a null pointer:
 
-# concreate examples
+# concrete examples
 ~~~
 // rememb-o-matic
 #include <iostream>
