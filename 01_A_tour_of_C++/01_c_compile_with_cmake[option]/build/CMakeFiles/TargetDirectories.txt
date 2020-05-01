@@ -1,0 +1,3 @@
+/home/parallels/Documents/workspace/repo/learn_cpp_in_30_minutes/01_A_tour_of_C++/01_c_compile_with_cmake[option]/build/CMakeFiles/rebuild_cache.dir
+/home/parallels/Documents/workspace/repo/learn_cpp_in_30_minutes/01_A_tour_of_C++/01_c_compile_with_cmake[option]/build/CMakeFiles/hello1.dir
+/home/parallels/Documents/workspace/repo/learn_cpp_in_30_minutes/01_A_tour_of_C++/01_c_compile_with_cmake[option]/build/CMakeFiles/edit_cache.dir
