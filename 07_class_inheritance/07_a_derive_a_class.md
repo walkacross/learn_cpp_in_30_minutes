@@ -57,7 +57,7 @@ this particular heading indicates that Animal is a public base class, this is te
 what needs to be added to these inherited feature？
 * a derived class needs its own constructors.
 * a derived class can add additional data members and members functions as needed.
-
+~~~
 
 ## 2.1 subclass declaration
 ~~~
