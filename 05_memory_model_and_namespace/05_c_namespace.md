@@ -1,5 +1,6 @@
 # 1 namespace
 > https://www.tutorialspoint.com/cplusplus/cpp_namespaces.htm
+
 > https://docs.microsoft.com/en-us/cpp/cpp/namespaces-cpp
 
 names in c++ can refer to variables, function, structures, enumerations, classes, and class and struct members.  when programming projects grow large, the potential for name conflics increses, such conflics are termed *namespace problem*. the c++ standard provides namespace facilities to provide greater control over the scope of names.
