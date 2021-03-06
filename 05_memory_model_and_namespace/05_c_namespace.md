@@ -49,7 +49,7 @@ namespace Jack{
 namespace Jill{
     char * goose(char*);
 }
-
+~~~
 ## 1.4 how to access names in a given namespace.
 the simplest wau is to use ::, the scope-resolution operator, to *qualify* a name with its namespace:
 ~~~
@@ -69,7 +69,7 @@ A using declaration, then, make a single name available. In contrast, the using 
 
 ### 1.6.1 namespace nest
 you can nest namespace declarations, like this:
-
+~~~
 namespace elements
 {
     namespace fire
@@ -79,7 +79,7 @@ namespace elements
 
     float water;
 }
-
+~~~
 in this case, you refer to the flame variable as elemetns::fire::flame. similarly, you can make the inner names available with this using directive
 ~~~
 using namespace elements::fire
