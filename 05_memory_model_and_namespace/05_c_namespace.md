@@ -103,4 +103,12 @@ myth::fetch;
 Jill::fetch;
 ~~~
 
+## 1.6.3 Discontiguous Namespace in C++
+C++ gives you the provision to define namespaces in various parts of the program that can be spread over multiple files. This is called as a discontiguous namespace.
+
+A namespace can be declared in multiple blocks in a single file, and in multiple files. The compiler joins the parts together during preprocessing and the resulting namespace contains all the members declared in all the parts. An example of this is the std namespace which is declared in each of the header files in the standard library.
+
+> https://stackoverflow.com/questions/4093407/c-namespaces-and-defining-classes-in-separate-files
+
+
 ## 1.7 concrete example about namespaces
