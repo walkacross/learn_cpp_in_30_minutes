@@ -329,3 +329,117 @@ int main()
 3. Temporary objects created while program execution are always of const type.
 4. If a function has a non-const parameter, it cannot be passed a const argument while making a call.
 5. But, a function which has a const type parameter, can be passed a const type argument as well as a non-const argument.
+
+## 4 Defining Class Data members as const
+These are data variables in class which are defined using const keyword. They are not initialized during declaration. Their initialization is done in the constructor.
+
+~~~
+class Test
+{
+    const int i;
+    public:
+    Test(int x):i(x)
+    {
+        cout << "\ni value set: " << i;
+    }
+};
+
+int main()
+{
+    Test t(10);
+    Test s(20);
+}
+~~~
+In this program, i is a constant data member, in every object its independent copy will be present, hence it is initialized with each object using the constructor. And once initialized, its value cannot be changed. The above way of initializing a class member is known as Initializer List in C++.
+
+
+
+## 5 Defining Class's Member function as const
+A const member functions never modifies data members in an object.
+~~~
+class StarWars
+{
+    public:
+    int i;
+    StarWars(int x)    // constructor
+    { 
+        i = x; 
+    }
+
+    int falcon() const  // constant function
+    { 
+        /* 
+            can do anything but will not
+            modify any data members
+        */
+        cout << "Falcon has left the Base";
+    }
+
+    int gamma()
+    { 
+        i++; 
+    }
+};
+
+int main()
+{
+    StarWars objOne(10);        // non const object
+    const StarWars objTwo(20);      // const object
+
+    objOne.falcon();     // No error
+    objTwo.falcon();     // No error
+
+    cout << objOne.i << objTwo.i;
+
+    objOne.gamma();     // No error
+    objTwo.gamma();     // Compile time error
+}
+~~~
+output
+~~~
+Falcon has left the Base
+Falcon has left the Base
+10 20
+~~~
+
+Here, we can see, that const member function never changes data members of class, and it can be used with both const and non-const objecta. But a const object cannot be used with a member function which tries to change its data members.
+
+### mutable Keyword
+mutable keyword is used with member variables of class, which we want to change even if the object is of const type. Hence, mutable data members of a const objects can be modified.
+~~~
+class Zee
+{
+    int i;
+    mutable int j;
+    public:
+    Zee()
+    {
+        i = 0; 
+        j = 0;
+    }
+    
+    void fool() const
+    { 
+        i++;    // will give error
+        j++;    // works, because j is mutable
+    }
+};
+
+int main()
+{
+    const Zee obj;
+    obj.fool();
+}
+~~~
+
+## 6 Defining Class Object as const
+When an object is declared or created using the const keyword, its data members can never be changed, during the object's lifetime.
+
+Syntax:
+~~~
+const class_name object;
+~~~
+For example, if in the class Test defined above, we want to define a constant object, we can do it like:
+~~~
+const Test r(30);
+~~~
