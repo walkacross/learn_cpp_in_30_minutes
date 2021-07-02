@@ -226,3 +226,86 @@ Now the first const can be on either side of the type so:
 const int * == int const *
 const int * const == int const * const
 ~~~
+
+## 3 const Function Arguments and Return types
+A function() parameters and return type of function() can be declared as constant. Constant values cannot be changed in function body as any such attempt will generate a compile-time error.
+### 3-a: Constant Function Parameters
+
+Below is the C++ program to implement the above approach: 
+
+~~~
+// C++ program to demonstrate the
+// above approach
+#include <iostream>
+using namespace std;
+
+// Function foo() with variable
+// const int
+void foo(const int y)
+{
+	// y = 6; const value
+	// can't be change
+	cout << y;
+}
+
+// Function foo() with variable int
+void foo1(int y)
+{
+	// Non-const value can be change
+	y = 5;
+	cout << '\n'
+		<< y;
+}
+
+// Driver Code
+int main()
+{
+	int x = 9;
+	const int z = 10;
+
+	foo(z);
+	foo1(x);
+
+	return 0;
+}
+
+~~~
+
+output
+~~~
+10
+5
+~~~
+### 3-b const return type
+The return type of the function() is const and so it returns a const integer value to us. 
+
+Below is the C++ program to implement the above approach: 
+
+~~~
+// C++ program for the above approach
+#include <iostream>
+using namespace std;
+
+const int foo(int y)
+{
+	y--;
+	return y;
+}
+
+int main()
+{
+	int x = 9;
+	const int z = 10;
+	cout << foo(x) << '\n'
+		<< foo(z);
+
+	return 0;
+}
+
+~~~
+output
+~~~
+8
+9
+~~~
+There is no substantial issue to pass const or non-const variable to the function because the value that will be returned by the function will be constant automatically. As the argument of the function is non-const.
