@@ -309,3 +309,23 @@ output
 9
 ~~~
 There is no substantial issue to pass const or non-const variable to the function because the value that will be returned by the function will be constant automatically. As the argument of the function is non-const.
+
+### Some Important points to Remember
+1. For built in datatypes, returning a const or non-const value, doesn't make any difference.
+~~~
+const int h()
+{
+    return 1;
+}
+
+int main()
+{
+    const int j = h();
+    int k = h();
+}
+//Both j and k will be assigned the value 1. No error will occur.
+~~~
+2. For user defined datatypes, returning const, will prevent its modification.
+3. Temporary objects created while program execution are always of const type.
+4. If a function has a non-const parameter, it cannot be passed a const argument while making a call.
+5. But, a function which has a const type parameter, can be passed a const type argument as well as a non-const argument.
