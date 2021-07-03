@@ -259,3 +259,247 @@ A reference variable provides a new name to an existing variable. It is derefere
 Reference is closely related to pointer. In many cases, it can be used as an alternative to pointer. A reference allows you to manipulate an object using pointer, but without the pointer syntax of referencing and dereferencing.
 
 The above example illustrates how reference works, but does not show its typical usage, which is used as the function formal parameter for pass-by-reference.
+
+# 3 Arguments passing techniques in c++
+The Main objective of passing Argument to function is Message passing. The message passing is also known as communication between two functions, that is between a caller and called functions. There are three Methods by which we can pass message to the function. These Methods are as follows:
+
+1. pass-by-value
+2. pass-by-pointer
+3. pass-by-reference
+
+## 3.1 pass-by-value
+In C/C++, by default, arguments are passed into functions by value (except arrays which is treated as pointers). That is, a clone copy of the argument is made and passed into the function. Changes to the clone copy inside the function has no effect to the original argument in the caller. In other words, the called function has no access to the variables in the caller. For example,
+~~~
+/* Pass-by-value into function (TestPassByValue.cpp) */
+#include <iostream>
+using namespace std;
+ 
+int square(int);
+ 
+int main() {
+   int number = 8;
+   cout <<  "In main(): " << &number << endl;  // 0x22ff1c
+   cout << number << endl;         // 8
+   cout << square(number) << endl; // 64
+   cout << number << endl;         // 8 - no change
+}
+ 
+int square(int n) {  // non-const
+   cout <<  "In square(): " << &n << endl;  // 0x22ff00
+   n *= n;           // clone modified inside the function
+   return n;
+}
+~~~
+The output clearly shows that there are two different addresses.
+
+## 3.2 pass-by-pointer
+In many situations, we may wish to modify the original copy directly (especially in passing huge object or array) to avoid the overhead of cloning. This can be done by passing a pointer of the object into the function, known as pass-by-pointer. For example,
+~~~
+/* Pass-by-reference using pointer (TestPassByPointer.cpp) */
+#include <iostream>
+using namespace std;
+ 
+void square(int *);
+ 
+int main() {
+   int number = 8;
+   cout <<  "In main(): " << &number << endl;  // 0x22ff1c
+   cout << number << endl;   // 8
+   square(&number);          // Explicit referencing to pass an address
+   cout << number << endl;   // 64
+}
+ 
+void square(int * pNumber) {  // Function takes an int pointer (non-const)
+   cout <<  "In square(): " << pNumber << endl;  // 0x22ff1c
+   *pNumber *= *pNumber;      // Explicit de-referencing to get the value pointed-to
+}
+~~~
+
+## 3.3 pass-by-reference
+Instead of passing pointers into function, you could also pass references into function, to avoid the clumsy syntax of referencing and dereferencing. For example,
+~~~
+/* Pass-by-reference using reference (TestPassByReference.cpp) */
+#include <iostream>
+using namespace std;
+ 
+void square(int &);
+ 
+int main() {
+   int number = 8;
+   cout <<  "In main(): " << &number << endl;  // 0x22ff1c
+   cout << number << endl;  // 8
+   square(number);          // Implicit referencing (without '&')
+   cout << number << endl;  // 64
+}
+ 
+void square(int & rNumber) {  // Function takes an int reference (non-const)
+   cout <<  "In square(): " << &rNumber << endl;  // 0x22ff1c
+   rNumber *= rNumber;        // Implicit de-referencing (without '*')
+}
+~~~
+Again, the output shows that the called function operates on the same address, and can thus modify the caller's variable.
+
+Take note referencing (in the caller) and dereferencing (in the function) are done implicitly. The only coding difference with pass-by-value is in the function's parameter declaration.
+
+Recall that references are to be initialized during declaration. In the case of function formal parameter, the references are initialized when the function is invoked, to the caller's arguments.
+
+References are primarily used in passing reference in/out of functions to allow the called function accesses variables in the caller directly.
+
+## 3.4 *const* Function Reference/Pointer Parameters
+A *const* function formal parameter cannot be modified inside the function. Use const whenever possible as it protects you from inadvertently modifying the parameter and protects you against many programming errors.
+
+A *const* function parameter can receive both const and non-const argument. On the other hand, a non-const function reference/pointer parameter can only receive non-const argument. For example,
+~~~
+/* Test Function const and non-const parameter (FuncationConstParameter.cpp) */
+#include <iostream>
+using namespace std;
+ 
+int squareConst(const int);
+int squareNonConst(int);
+int squareConstRef(const int &);
+int squareNonConstRef(int &);
+ 
+int main() {
+   int number = 8;
+   const int constNumber = 9;
+   cout << squareConst(number) << endl;
+   cout << squareConst(constNumber) << endl;
+   cout << squareNonConst(number) << endl;
+   cout << squareNonConst(constNumber) << endl;
+ 
+   cout << squareConstRef(number) << endl;
+   cout << squareConstRef(constNumber) << endl;
+   cout << squareNonConstRef(number) << endl;
+   // cout << squareNonConstRef(constNumber) << endl;
+       // error: invalid initialization of reference of
+       //  type 'int&' from expression of type 'const int'
+}
+ 
+int squareConst(const int number) {
+   // number *= number;  // error: assignment of read-only parameter
+   return number * number;
+}
+ 
+int squareNonConst(int number) {  // non-const parameter
+   number *= number;
+   return number;
+}
+ 
+int squareConstRef(const int & number) {  // const reference
+   return number * number;
+}
+ 
+int squareNonConstRef(int & number) {  // non-const reference
+   return number * number;
+}
+~~~
+
+## 3.5 Passing the Function's Return Value
+### 3.5-a Passing the Return-value as Reference
+You can also pass the return-value as reference or pointer. For example,
+~~~
+/* Passing back return value using reference (TestPassByReferenceReturn.cpp) */
+#include <iostream>
+using namespace std;
+ 
+int & squareRef(int &);
+int * squarePtr(int *);
+ 
+int main() {
+   int number1 = 8;
+   cout <<  "In main() &number1: " << &number1 << endl;  // 0x22ff14
+   int & result = squareRef(number1);
+   cout <<  "In main() &result: " << &result << endl;  // 0x22ff14
+   cout << result << endl;   // 64
+   cout << number1 << endl;  // 64
+ 
+   int number2 = 9;
+   cout <<  "In main() &number2: " << &number2 << endl;  // 0x22ff10
+   int * pResult = squarePtr(&number2);
+   cout <<  "In main() pResult: " << pResult << endl;  // 0x22ff10
+   cout << *pResult << endl;   // 81
+   cout << number2 << endl;    // 81
+}
+ 
+int & squareRef(int & rNumber) {
+   cout <<  "In squareRef(): " << &rNumber << endl;  // 0x22ff14
+   rNumber *= rNumber;
+   return rNumber;
+}
+ 
+int * squarePtr(int * pNumber) {
+   cout <<  "In squarePtr(): " << pNumber << endl;  // 0x22ff10
+   *pNumber *= *pNumber;
+   return pNumber;
+}
+~~~
+
+attention: **You should not pass Function's local variable as return value by reference**
+~~~
+/* Test passing the result (TestPassResultLocal.cpp) */
+#include <iostream>
+using namespace std;
+ 
+int * squarePtr(int);
+int & squareRef(int);
+ 
+int main() {
+   int number = 8;
+   cout << number << endl;  // 8
+   cout << *squarePtr(number) << endl;  // ??
+   cout << squareRef(number) << endl;   // ??
+}
+ 
+int * squarePtr(int number) {
+   int localResult = number * number;
+   return &localResult;
+      // warning: address of local variable 'localResult' returned
+}
+ 
+int & squareRef(int number) {
+   int localResult = number * number;
+   return localResult;
+      // warning: reference of local variable 'localResult' returned
+}
+~~~
+This program has a serious logical error, as local variable of function is passed back as return value by reference. Local variable has local scope within the function, and its value is destroyed after the function exits. The GCC compiler is kind enough to issue a warning (but not error).
+
+It is safe to return a reference that is passed into the function as an argument. See earlier examples.
+
+### 3.5-b Passing Dynamically Allocated Memory as Return Value by Reference
+Instead, you need to dynamically allocate a variable for the return value, and return it by reference.
+~~~
+/* Test passing the result (TestPassResultNew.cpp) */
+#include <iostream>
+using namespace std;
+ 
+int * squarePtr(int);
+int & squareRef(int);
+ 
+int main() {
+   int number = 8;
+   cout << number << endl;  // 8
+   cout << *squarePtr(number) << endl;  // 64
+   cout << squareRef(number) << endl;   // 64
+}
+ 
+int * squarePtr(int number) {
+   int * dynamicAllocatedResult = new int(number * number);
+   return dynamicAllocatedResult;
+}
+ 
+int & squareRef(int number) {
+   int * dynamicAllocatedResult = new int(number * number);
+   return *dynamicAllocatedResult;
+}
+~~~
+
+## Summary
+Pointers and references are highly complex and difficult to master. But they can greatly improve the efficiency of the programs.
+
+For novices, avoid using pointers in your program. Improper usage can lead to serious logical bugs. However, you need to understand the syntaxes of pass-by-reference with pointers and references, because they are used in many library functions.
+
+* In pass-by-value, a clone is made and passed into the function. The caller's copy cannot be modified.
+* In pass-by-reference, a pointer is passed into the function. The caller's copy could be modified inside the function.
+* In pass-by-reference with reference arguments, you use the variable name as the argument.
+* In pass-by-reference with pointer arguments, you need to use &varName (an address) as the argument.
