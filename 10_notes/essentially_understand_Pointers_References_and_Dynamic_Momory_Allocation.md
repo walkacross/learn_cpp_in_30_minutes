@@ -151,3 +151,111 @@ int * p = NULL;         // Also declare a NULL pointer points to nothing
 Initialize a pointer to null during declaration is a good software engineering practice.
 
 C++11 introduces a new keyword called nullptr to represent null pointer.
+
+
+# 2 Reference Variables
+C++ added the so-called reference variables (or references in short). A reference is an alias, or an alternate name to an existing variable. For example, suppose you make peter a reference (alias) to paul, you can refer to the person as either peter or paul.
+
+The main use of references is acting as function formal parameters to support pass-by-reference. In an reference variable is passed into a function, the function works on the original copy (instead of a clone copy in pass-by-value). Changes inside the function are reflected outside the function.
+
+A reference is similar to a pointer. In many cases, a reference can be used as an alternative to pointer, in particular, for the function parameter.
+
+## 2.1  References (or Aliases) (&)
+Recall that C/C++ use & to denote the address-of operator in an expression. C++ assigns an additional meaning to & in declaration to declare a reference variable.
+
+The meaning of symbol & is different in an expression and in a declaration. When it is used in an expression, & denotes the address-of operator, which returns the address of a variable, e.g., if number is an int variable, &number returns the address of the variable number (this has been described in the above section).
+
+Howeve, when & is used in a declaration (including function formal parameters), it is part of the type identifier and is used to declare a reference variable (or reference or alias or alternate name). It is used to provide another name, or another reference, or alias to an existing variable.
+
+The syntax is as follow:
+~~~
+type &newName = existingName;
+// or
+type& newName = existingName;
+// or
+type & newName = existingName;  // I shall adopt this convention
+~~~
+
+It shall be read as "newName is a reference to exisitngName", or "newNew is an alias of existingName". You can now refer to the variable as newName or existingName.
+
+For example,
+~~~
+/* Test reference declaration and initialization (TestReferenceDeclaration.cpp) */
+#include <iostream>
+using namespace std;
+ 
+int main() {
+   int number = 88;          // Declare an int variable called number
+   int & refNumber = number; // Declare a reference (alias) to the variable number
+                             // Both refNumber and number refer to the same value
+ 
+   cout << number << endl;    // Print value of variable number (88)
+   cout << refNumber << endl; // Print value of reference (88)
+ 
+   refNumber = 99;            // Re-assign a new value to refNumber
+   cout << refNumber << endl;
+   cout << number << endl;    // Value of number also changes (99)
+ 
+   number = 55;               // Re-assign a new value to number
+   cout << number << endl;
+   cout << refNumber << endl; // Value of refNumber also changes (55)
+}
+
+~~~
+
+## 2.2  How References Work?
+A reference works as a pointer. A reference is declared as an alias of a variable. It stores the address of the variable, as illustrated:
+
+## 2.3 References vs. Pointers
+Every reference has a dual nature: It’s implemented under the covers as a pointer, but semantically it usually behaves like an alias because most uses of its name automatically dereference it.
+
+Pointers and references are equivalent, except:
+
+1. A reference is a name constant for an address. You need to initialize the reference during declaration.
+~~~
+int & iRef;   // Error: 'iRef' declared as reference but not initialized
+~~~
+Once a reference is established to a variable, you cannot change the reference to reference another variable.
+
+2. To get the value pointed to by a pointer, you need to use the dereferencing operator * (e.g., if pNumber is a int pointer, *pNumber returns the value pointed to by pNumber. It is called dereferencing or indirection). To assign an address of a variable into a pointer, you need to use the address-of operator & (e.g., pNumber = &number).
+On the other hand, referencing and dereferencing are done on the references implicitly. For example, if refNumber is a reference (alias) to another int variable, refNumber returns the value of the variable. No explicit dereferencing operator * should be used. Furthermore, to assign an address of a variable to a reference variable, no address-of operator & is needed.
+
+for example
+~~~
+/* References vs. Pointers (TestReferenceVsPointer.cpp) */
+#include <iostream>
+using namespace std;
+ 
+int main() {
+   int number1 = 88, number2 = 22;
+ 
+   // Create a pointer pointing to number1
+   int * pNumber1 = &number1;  // Explicit referencing
+   *pNumber1 = 99;             // Explicit dereferencing
+   cout << *pNumber1 << endl;  // 99
+   cout << &number1 << endl;   // 0x22ff18
+   cout << pNumber1 << endl;   // 0x22ff18 (content of the pointer variable - same as above)
+   cout << &pNumber1 << endl;  // 0x22ff10 (address of the pointer variable)
+   pNumber1 = &number2;        // Pointer can be reassigned to store another address
+ 
+   // Create a reference (alias) to number1
+   int & refNumber1 = number1;  // Implicit referencing (NOT &number1)
+   refNumber1 = 11;             // Implicit dereferencing (NOT *refNumber1)
+   cout << refNumber1 << endl;  // 11
+   cout << &number1 << endl;    // 0x22ff18
+   cout << &refNumber1 << endl; // 0x22ff18
+   //refNumber1 = &number2;     // Error! Reference cannot be re-assigned
+                                // error: invalid conversion from 'int*' to 'int'
+   refNumber1 = number2;        // refNumber1 is still an alias to number1.
+                                // Assign value of number2 (22) to refNumber1 (and number1).
+   number2++;   
+   cout << refNumber1 << endl;  // 22
+   cout << number1 << endl;     // 22
+   cout << number2 << endl;     // 23
+}
+~~~
+A reference variable provides a new name to an existing variable. It is dereferenced implicitly and does not need the dereferencing operator * to retrieve the value referenced. On the other hand, a pointer variable stores an address. You can change the address value stored in a pointer. To retrieve the value pointed to by a pointer, you need to use the indirection operator *, which is known as explicit dereferencing. Reference can be treated as a const pointer. It has to be initialized during declaration, and its content cannot be changed.
+
+Reference is closely related to pointer. In many cases, it can be used as an alternative to pointer. A reference allows you to manipulate an object using pointer, but without the pointer syntax of referencing and dereferencing.
+
+The above example illustrates how reference works, but does not show its typical usage, which is used as the function formal parameter for pass-by-reference.
