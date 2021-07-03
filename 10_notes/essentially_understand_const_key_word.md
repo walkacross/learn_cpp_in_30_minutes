@@ -206,6 +206,39 @@ Explanation: Here, the const pointer variable points to the const variable. So, 
 
 ### conclusion: how to distinguish?
 
+1. Non-constant pointer to constant data: Data pointed to CANNOT be changed; but pointer CAN be changed to point to another data. For example,
+~~~
+int i1 = 8, i2 = 9;
+const int * iptr = &i1;  // non-constant pointer pointing to constant data
+// *iptr = 9;   // error: assignment of read-only location
+iptr = &i2;  // okay
+~~~
+
+2. Constant pointer to non-constant data: Data pointed to CAN be changed; but pointer CANNOT be changed to point to another data. For example,
+~~~
+int i1 = 8, i2 = 9;
+int * const iptr = &i1;  // constant pointer pointing to non-constant data
+                         // constant pointer must be initialized during declaration
+*iptr = 9;   // okay
+// iptr = &i2;  // error: assignment of read-only variable
+~~~
+
+3. Constant pointer to constant data: Data pointed to CANNOT be changed; and pointer CANNOT be changed to point to another data. For example,
+~~~
+int i1 = 8, i2 = 9;
+const int * const iptr = &i1;  // constant pointer pointing to constant data
+// *iptr = 9;   // error: assignment of read-only variable
+// iptr = &i2;  // error: assignment of read-only variable
+~~~
+4. Non-constant pointer to non-constant data: Data pointed to CAN be changed; and pointer CAN be changed to point to another data. For example,
+~~~
+int i1 = 8, i2 = 9;
+int * iptr = &i1;  // non-constant pointer pointing to non-constant data
+*iptr = 9;   // okay
+iptr = &i2;  // okay
+~~~
+what's the rule to distinguish the object which const point to?
+
 The rule is:
 
 > const applies to the thing left of it. If there is nothing on the left then it applies to the thing right of it.
