@@ -503,3 +503,149 @@ For novices, avoid using pointers in your program. Improper usage can lead to se
 * In pass-by-reference, a pointer is passed into the function. The caller's copy could be modified inside the function.
 * In pass-by-reference with reference arguments, you use the variable name as the argument.
 * In pass-by-reference with pointer arguments, you need to use &varName (an address) as the argument.
+
+# 4 Dynamic Memory Allocation
+## 4.1  new and delete Operators
+Instead of define an int variable (int number), and assign the address of the variable to the int pointer (int *pNumber = &number), the storage can be dynamically allocated at runtime, via a new operator. In C++, whenever you allocate a piece of memory dynamically via new, you need to use delete to remove the storage (i.e., to return the storage to the heap).
+
+The new operation returns a pointer to the memory allocated. The delete operator takes a pointer (pointing to the memory allocated via new) as its sole argument.
+
+For example,
+~~~
+// Static allocation
+int number = 88;
+int * p1 = &number;  // Assign a "valid" address into pointer
+ 
+// Dynamic Allocation
+int * p2;            // Not initialize, points to somewhere which is invalid
+cout << p2 << endl; // Print address before allocation
+p2 = new int;       // Dynamically allocate an int and assign its address to pointer
+                    // The pointer gets a valid address with memory allocated
+*p2 = 99;
+cout << p2 << endl;  // Print address after allocation
+cout << *p2 << endl; // Print value point-to
+delete p2;           // Remove the dynamically allocated storage
+~~~
+Observe that new and delete operators work on pointer.
+
+To initialize the allocated memory, you can use an initializer for fundamental types, or invoke a constructor for an object. For example,
+~~~
+// use an initializer to initialize a fundamental type (such as int, double)
+int * p1 = new int(88);
+double * p2 = new double(1.23);
+ 
+// C++11 brace initialization syntax
+int * p1 = new int {88};
+double * p2 = new double {1.23};
+ 
+// invoke a constructor to initialize an object (such as Date, Time)
+Date * date1 = new Date(1999, 1, 1);  
+Time * time1 = new Time(12, 34, 56);
+~~~
+You can dynamically allocate storage for global pointers inside a function. Dynamically allocated storage inside the function remains even after the function exits. For example,
+~~~
+// Dynamically allocate global pointers (TestDynamicAllocation.cpp)
+#include <iostream>
+using namespace std;
+ 
+int * p1, * p2;  // Global int pointers
+ 
+// This function allocates storage for the int*
+// which is available outside the function
+void allocate() {
+   p1 = new int;     // Allocate memory, initial content unknown
+   *p1 = 88;         // Assign value into location pointed to by pointer
+   p2 = new int(99); // Allocate and initialize
+}
+ 
+int main() {
+   allocate();
+   cout << *p1 << endl;  // 88
+   cout << *p2 << endl;  // 99
+   delete p1;  // Deallocate
+   delete p2;
+   return 0;
+}
+~~~
+
+The main differences between static allocation and dynamic allocations are:
+
+1. In static allocation, the compiler allocates and deallocates the storage automatically, and handle memory management. Whereas in dynamic allocation, you, as the programmer, handle the memory allocation and deallocation yourself (via new and delete operators). You have full control on the pointer addresses and their contents, as well as memory management.
+2. Static allocated entities are manipulated through named variables. Dynamic allocated entities are handled through pointers.
+
+## 4.2  new[] and delete[] Operators
+Dynamic array is allocated at runtime rather than compile-time, via the new[] operator. To remove the storage, you need to use the delete[] operator (instead of simply delete). For example,
+~~~
+/* Test dynamic allocation of array  (TestDynamicArray.cpp) */
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+ 
+int main() {
+   const int SIZE = 5;
+   int * pArray;
+ 
+   pArray = new int[SIZE];  // Allocate array via new[] operator
+ 
+   // Assign random numbers between 0 and 99
+   for (int i = 0; i < SIZE; ++i) {
+      *(pArray + i) = rand() % 100;
+   }
+   // Print array
+   for (int i = 0; i < SIZE; ++i) {
+      cout << *(pArray + i) << " ";
+   }
+   cout << endl;
+ 
+   delete[] pArray;  // Deallocate array via delete[] operator
+   return 0;
+}
+~~~
+
+
+
+# appendix1
+## function pointer
+In C/C++, functions, like all data items, have an address. The name of a function is the starting address where the function resides in the memory, and therefore, can be treated as a pointer. We can pass a function pointer into function as well. The syntax for declaring a function pointer is:
+
+~~~
+// Function-pointer declaration
+return-type (* function-ptr-name) (parameter-list)
+ 
+// Examples
+double (*fp)(int, int)  // fp points to a function that takes two ints and returns a double (function-pointer)
+double *dp;             // dp points to a double (double-pointer)
+double *fun(int, int)   // fun is a function that takes two ints and returns a double-pointer
+
+double f(int, int);      // f is a function that takes two ints and returns a double
+fp = f;                 // Assign function f to fp function-pointer
+~~~
+
+example
+~~~
+/* Test Function Pointers (TestFunctionPointer.cpp) */
+#include <iostream>
+using namespace std;
+ 
+int arithmetic(int, int, int (*)(int, int));
+    // Take 3 arguments, 2 int's and a function pointer
+    //   int (*)(int, int), which takes two int's and return an int
+int add(int, int);
+int sub(int, int);
+ 
+int add(int n1, int n2) { return n1 + n2; }
+int sub(int n1, int n2) { return n1 - n2; }
+ 
+int arithmetic(int n1, int n2, int (*operation) (int, int)) {
+   return (*operation)(n1, n2);
+}
+ 
+int main() {
+   int number1 = 5, number2 = 6;
+ 
+   // add
+   cout << arithmetic(number1, number2, add) << endl;
+   // subtract
+   cout << arithmetic(number1, number2, sub) << endl;
+}
+~~~
