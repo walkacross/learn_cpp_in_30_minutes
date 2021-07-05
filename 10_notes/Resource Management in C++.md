@@ -1,0 +1,12 @@
+# Resources and Their Ownership
+My favorite definition of a resource is "anything that your program has to acquire and then release." Memory is of course the prominent example of a resource. It's acquired using new and released using delete. But there are many other types of resources—file handles, critical sections, GDI resources in Windows, etc. It's convenient to generalize the notion of a resource to encompass all objects created and released in a program, the ones allocated on the heap as well as the ones declared on the stack or in the global scope.
+
+The owner of a given resource is an object or a piece of code that's responsible for the resource's release. Ownership falls into two classes—automatic and explicit. An object is owned automatically if its release is guaranteed by the mechanisms of the language. For instance, an object embedded inside another object is guaranteed to be destroyed when the outer object is destroyed. The outer object is thus considered to be the owner of the embedded object.
+
+Similarly, every object that's declared on the stack (as an automatic variable) is guaranteed to be released (destroyed) when the flow of control leaves the scope in which the object is defined. In this case, the scope itself is considered the owner of the object. Notice that automatic ownership is compatible with all other mechanisms of the language, including exceptions. It doesn't matter how you exit a scope—normal flow of control, a break statement, a return, a goto, or a throw—automatic resources are always cleaned up.
+
+So far, so good! The problem starts with pointers, handles, and abstract states. If access to a resource is through a pointer, as is the case with objects allocated on the heap, C++ doesn't automatically take care of its release. Instead, the programmer has to explicitly release the resource, using the appropriate programming construct. For instance, if the object in question was created by calling new, it should be deallocated by calling delete. A file that was opened using CreateFile (Win32 API) should be closed using CloseHandle. A critical section entered using EnterCriticalSection should be exited using LeaveCriticalSection, etc. A "naked" pointer, file handle, or a state of a critical section has no owner that would guarantee its eventual release. The basic premise of resource management is to make sure that every resource has its owner.
+
+# reference
+
+https://www.informit.com/articles/article.aspx?p=21477
