@@ -257,6 +257,9 @@ Because variables have scope, duration, and linkage, let’s summarize in a char
 |Inline constant global variable|	inline const int g_x { 1 };|	File|	Static|	External|	Must be initialized|
 
 > file scope (also informally called global scope or global namespace scope), which means they are visible from the point of declaration until the end of the file in which they are declared.
+
 > Variables with automatic duration are created at the point of definition, and destroyed when the block they are part of is exited.
+
 > Variables with static duration are created when the program begins and destroyed when the program ends.
+
 > Variables with dynamic duration are created and destroyed by programmer request.
