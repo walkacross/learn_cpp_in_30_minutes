@@ -408,6 +408,10 @@ void square(int * pNumber) {  // Function takes an int pointer (non-const)
 ~~~
 
 ## 3.3 pass-by-reference
+While pass by value is suitable in many cases, it has a couple of limitations. First, when passing a large struct or class to a function, pass by value will make a copy of the argument into the function parameter. In many cases, this is a needless performance hit, as the original argument would have sufficed. Second, when passing arguments by value, the only way to return a value back to the caller is via the function’s return value. While this is often suitable, there are cases where it would be more clear and efficient to have the function modify the argument passed in. Pass by reference solves both of these issues.
+
+Pass by reference
+
 Instead of passing pointers into function, you could also pass references into function, to avoid the clumsy syntax of referencing and dereferencing. For example,
 ~~~
 /* Pass-by-reference using reference (TestPassByReference.cpp) */
@@ -436,6 +440,29 @@ Take note referencing (in the caller) and dereferencing (in the function) are do
 Recall that references are to be initialized during declaration. In the case of function formal parameter, the references are initialized when the function is invoked, to the caller's arguments.
 
 References are primarily used in passing reference in/out of functions to allow the called function accesses variables in the caller directly.
+
+* Advantages of passing by reference:
+~~~
+References allow a function to change the value of the argument, which is sometimes useful. Otherwise, const references can be used to guarantee the function won’t change the argument.
+Because a copy of the argument is not made, pass by reference is fast, even when used with large structs or classes.
+References can be used to return multiple values from a function (via out parameters).
+References must be initialized, so there’s no worry about null values.
+~~~
+
+* Disadvantages of passing by reference:
+
+Because a non-const reference cannot be initialized with a const l-value or an r-value (e.g. a literal or an expression), arguments to non-const reference parameters must be normal variables.
+It can be hard to tell whether an argument passed by non-const reference is meant to be input, output, or both. Judicious use of const and a naming suffix for out variables can help.
+It’s impossible to tell from the function call whether the argument may change. An argument passed by value and passed by reference looks the same. We can only tell whether an argument is passed by value or reference by looking at the function declaration. This can lead to situations where the programmer does not realize a function will change the value of the argument.
+When to use pass by reference:
+~~~
+When passing structs or classes (use const if read-only).
+When you need the function to modify an argument.
+When you need access to the type information of a fixed array.
+When not to use pass by reference:
+~~~
+When passing fundamental types that don’t need to be modified (use pass by value).
+
 
 ## 3.4 *const* Function Reference/Pointer Parameters
 A *const* function formal parameter cannot be modified inside the function. Use const whenever possible as it protects you from inadvertently modifying the parameter and protects you against many programming errors.
@@ -485,6 +512,145 @@ int squareNonConstRef(int & number) {  // non-const reference
    return number * number;
 }
 ~~~
+
+## understand how arguments passing really work
+### a: Addresses are actually passed by value
+
+When you pass a pointer to a function, the pointer’s value (the address it points to) is copied from the argument to the function’s parameter. In other words, it’s passed by value! If you change the function parameter’s value, you are only changing a copy. Consequently, the original pointer argument will not be changed.
+
+Here’s a sample program that illustrates this.
+~~~
+#include <iostream>
+ 
+void setToNull(int* tempPtr)
+{
+    // we're making tempPtr point at something else, not changing the value that tempPtr points to.
+    tempPtr = nullptr; // use 0 instead if not C++11
+}
+ 
+int main()
+{ 
+    // First we set ptr to the address of five, which means *ptr = 5
+    int five{ 5 };
+    int* ptr{ &five };
+	
+    // This will print 5
+    std::cout << *ptr;
+ 
+    // tempPtr will receive a copy of ptr
+    setToNull(ptr);
+ 
+    // ptr is still set to the address of five!
+ 
+    // This will print 5
+    if (ptr)
+        std::cout << *ptr;
+    else
+        std::cout << " ptr is null";
+ 
+    return 0;
+}
+~~~
+tempPtr receives a copy of the address that ptr is holding. Even though we change tempPtr to point at something else (nullptr), this does not change the value that ptr points to. Consequently, this program prints:
+~~~
+55
+~~~
+
+Note that even though the address itself is passed by value, you can still dereference that address to change the argument’s value. This is a common point of confusion, so let’s clarify:
+
+When passing an argument by address, the function parameter variable receives a copy of the address from the argument. At this point, the function parameter and the argument both point to the same value.
+* If the function parameter is then dereferenced to change the value being pointed to, that will impact the value the argument is pointing to, since both the function parameter and argument are pointing to the same value!
+* If the function parameter is assigned a different address, that will not impact the argument, since the function parameter is a copy, and changing the copy won’t impact the original. After changing the function parameter’s address, the function parameter and argument will point to different values, so dereferencing the parameter and changing the value will no longer affect the value pointed to by the argument.
+
+The following program illustrates the point:
+~~~
+#include <iostream>
+ 
+void setToSix(int* tempPtr)
+{
+    *tempPtr = 6; // we're changing the value that tempPtr (and ptr) points to
+}
+ 
+int main()
+{ 
+    // First we set ptr to the address of five, which means *ptr = 5
+    int five{ 5 };
+    int* ptr{ &five };
+	
+    // This will print 5
+    std::cout << *ptr;
+ 
+    // tempPtr will receive a copy of ptr
+    setToSix(ptr);
+ 
+    // tempPtr changed the value being pointed to to 6, so ptr is now pointing to the value 6
+ 
+    // This will print 6
+    if (ptr)
+        std::cout << *ptr;
+    else
+        std::cout << " ptr is null";
+ 
+    return 0;
+}
+~~~
+
+This prints:
+~~~
+56
+~~~
+
+### b: Passing addresses by reference
+The next logical question is, “What if we want to change the address an argument points to from within the function?”. Turns out, this is surprisingly easy. You can simply pass the address by reference. The syntax for doing a reference to a pointer is a little strange (and easy to get backwards). However, if you do get it backwards, the compiler will give you an error.
+
+The following program illustrates using a reference to a pointer:
+~~~
+#include <iostream>
+ 
+// tempPtr is now a reference to a pointer, so any changes made to tempPtr will change the argument as well!
+void setToNull(int*& tempPtr)
+{
+    tempPtr = nullptr; // use 0 instead if not C++11
+}
+ 
+int main()
+{ 
+    // First we set ptr to the address of five, which means *ptr = 5
+    int five{ 5 };
+    int* ptr{ &five };
+	
+    // This will print 5
+    std::cout << *ptr;
+ 
+    // tempPtr is set as a reference to ptr
+    setToNull(ptr);
+ 
+    // ptr has now been changed to nullptr!
+ 
+    if (ptr)
+        std::cout << *ptr;
+    else
+        std::cout << " ptr is null";
+ 
+    return 0;
+}
+~~~
+When we run the program again with this version of the function, we get:
+~~~
+5 ptr is null
+~~~
+
+Which shows that calling setToNull() did indeed change the value of ptr from &five to nullptr!
+
+### c: There is only pass by value
+
+Now that you understand the basic differences between passing by reference, address, and value, let’s get reductionist for a moment. :)
+
+In the lesson on references, we briefly mentioned that references are typically implemented by the compiler as pointers. This means that behind the scenes, pass by reference is essentially just a pass by address (with access to the reference doing an implicit dereference).
+
+And just above, we showed that pass by address is actually just passing an address by value!
+
+Therefore, we can conclude that C++ really passes everything by value! The properties of pass by address (and reference) come solely from the fact that we can dereference the passed address to change the argument, which we can not do with a normal value parameter!
 
 # 4 Passing the Function's Return Value(Returning values by value, reference, and address)
 In the three previous lessons, you learned about passing arguments to functions by value, reference, and address. In this section, we’ll consider the issue of returning values back to the caller via all three methods.
