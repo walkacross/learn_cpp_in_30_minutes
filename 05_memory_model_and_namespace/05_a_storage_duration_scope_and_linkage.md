@@ -3,7 +3,7 @@
 c++ offers many choices for storing data in memory. you have choices for how long data remainas in memory(**storage duration**) and choice for which parts of a program have access to data(**scope and linkage**)
 
 ## 1.1 storage duration
-c++ uses thress separate schemes (four under c++11) for storing data, and the schemes differ in how long they preserve data in memory:
+c++ uses thress separate schemes (four under c++11) for storing data, and the schemes differ in how long they preserve data in memory. more concrete, A variable’s duration determines when it is created and destroyed.
 
 * 1 **Automatoc storage duration** --- variables declared inside a function definition (include function parameters) have automatic storage duration.   they are created when program execution enters the function or block in which they are defined, and the memory used for them is freed when execution leaves the funtion or block.
 
@@ -185,4 +185,73 @@ static void func3(int n)
 }
 ~~~
 
+## summary
 
+### a-Scope summary
+
+> An identifier’s scope determines where the identifier can be accessed within the source code.
+
+Variables with block scope / local scope can only be accessed within the block in which they are declared (including nested blocks). This includes:
+* Local variables
+* Function parameters
+* User-defined type definitions (such as enums and classes) declared inside a block
+* Variables and functions with global scope / file scope can be accessed from the point of declaration until the end of the file. This includes:
+* Global variables
+* Functions
+* User-defined type definitions (such as enums and classes) declared inside a namespace or in the global scope
+
+### b-Duration summary
+> A variable’s duration determines when it is created and destroyed.
+
+* Variables with automatic duration are created at the point of definition, and destroyed when the block they are part of is exited. This includes:
+1. Local variables
+2. Function parameters
+* Variables with static duration are created when the program begins and destroyed when the program ends. This includes:
+1. Global variables
+2. Static local variables
+* Variables with dynamic duration are created and destroyed by programmer request. This includes:
+1. Dynamically allocated variables
+
+### c Linkage summary
+
+An identifier’s linkage determines whether multiple declarations of an identifier refer to the same identifier or not.
+
+* An identifier with no linkage means the identifier only refers to itself. This includes:
+1. Local variables
+2. User-defined type definitions (such as enums and classes) declared inside a block
+
+* An identifier with internal linkage can be accessed anywhere within the file it is declared. This includes:
+1. Static global variables (initialized or uninitialized)
+2. Static functions
+3. Const global variables
+4. Functions declared inside an unnamed namespace
+5. User-defined type definitions (such as enums and classes) declared inside an unnamed namespace
+
+* An identifier with external linkage can be accessed anywhere within the file it is declared, or other files (via a forward declaration). This includes:
+1. Functions
+2. Non-const global variables (initialized or uninitialized)
+3. Extern const global variables
+4. Inline const global variables
+5. User-defined type definitions (such as enums and classes) declared inside a namespace or in the global scope
+
+Identifiers with external linkage will generally cause a duplicate definition linker error if the definitions are compiled into more than one .cpp file (due to violating the one-definition rule). There are some exceptions to this rule (for types, templates, and inline functions and variables) -- we’ll cover these further in future lessons when we talk about those topics.
+
+> Also note that functions have external linkage by default. They can be made internal by using the static keyword.
+
+
+Because variables have scope, duration, and linkage, let’s summarize in a chart:
+
+|Type	   |Example	|Scope |	Duration   |	Linkage	|Notes     |
+|----------|--------|------|------------|------------|----------|
+|Local variable|int x;|	Block|	Automatic|	None|-	|
+|Static local variable|	static int s_x;|	Block|	Static|	None| - |
+|Dynamic variable|	int *x { new int{} };|	Block|	Dynamic|	None|-|	
+|Function parameter|	void foo(int x)	|Block|	Automatic|	None|-|	
+|External non-constant global variable|	int g_x;|	File|	Static|	External|	Initialized or uninitialized|
+|Internal non-constant global variable|	static int g_x;|	File|	Static|	Internal|	Initialized or uninitialized|
+|Internal constant global variable|	constexpr int g_x { 1 };|	File|	Static|	Internal|	Must be initialized|
+|External constant global variable|	extern constexpr int g_x { 1 };|	File|	Static|	External|	Must be initialized|
+|Inline constant global variable |	inline constexpr int g_x { 1 };|	File|	Static|	External|	Must be initialized|
+|Internal constant global variable|	const int g_x { 1 };|	File|	Static|	Internal|	Must be initialized|
+|External constant global variable|	extern const int g_x { 1 };|	File|	Static|	External|	Must be initialized at definition|
+|Inline constant global variable|	inline const int g_x { 1 };|	File|	Static|	External|	Must be initialized|
