@@ -154,4 +154,5 @@ void BrassPlus::Withdraw(double amt)
 
 * every variable, function, memethos in class are object, object should be with some attributes, like name, type, name, value, address, duration, scope,linkage, const, or virtual or pure virtual. you can set some attributes to it by c++ keyword, and the object will behave differently according its attributes.
 
-
+## polymorphism-and-abstract-base-class
+> https://www.codingunit.com/cplusplus-tutorial-polymorphism-and-abstract-base-class
