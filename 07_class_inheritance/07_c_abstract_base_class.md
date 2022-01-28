@@ -156,3 +156,7 @@ void BrassPlus::Withdraw(double amt)
 
 ## polymorphism-and-abstract-base-class
 > https://www.codingunit.com/cplusplus-tutorial-polymorphism-and-abstract-base-class
+
+
+## Runtime Polymorphism in various types of Inheritance in C++
+> https://www.geeksforgeeks.org/runtime-polymorphism-in-various-types-of-inheritance-in-c/?ref=rp
