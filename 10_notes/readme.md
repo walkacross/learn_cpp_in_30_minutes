@@ -1,3 +1,9 @@
+# seperation of header and source file.
+[C++ Header File Guidelines](http://websites.umich.edu/~eecs381/handouts/CppHeaderFileGuidelines.pdf)
+
+[what happends if Writing function definition in header files in C++](https://www.techtalk7.com/writing-function-definition-in-header-files-in-c/)
+
+
 # How to tell g++ compiler where to search for include files?
 
 In Python, you import modules, and the equivalent in C++ is a #include (pound include). There are two different ways to use this statement:
