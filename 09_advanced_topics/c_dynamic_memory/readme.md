@@ -1,4 +1,5 @@
 # dynamic memory
+> the best note: https://www.learncpp.com/cpp-tutorial/dynamic-memory-allocation-with-new-and-delete/
 
 # motivation
 In the programs seen in previous chapters, all memory needs were determined before program execution by defining the variables needed. But there may be cases where the memory needs of a program can only be determined during runtime. For example, when the memory needed depends on user input. On these cases, programs need to dynamically allocate memory, for which the C++ language integrates the operators new and delete.
@@ -83,6 +84,49 @@ int main ()
   return 0;
 }
 ~~~
+
+# important
+~~~
+int* ptr{ new int }; // dynamically allocate an integer and assign the address to ptr so we can access it later
+~~~
+In the above case, we’re requesting an integer’s worth of memory from the operating system. The new operator creates the object using that memory, and then returns a pointer containing the address of the memory that has been allocated.
+
+Dynamically allocated memory stays allocated until it is explicitly deallocated or until the program ends (and the operating system cleans it up, assuming your operating system does that). However, **the pointers used to hold dynamically allocated memory addresses follow the normal scoping rules for local variables.** This mismatch can create interesting problems.
+~~~
+void doSomething()
+{
+    int* ptr{ new int{} };
+}
+~~~
+
+**This function allocates an integer dynamically, but never frees it using delete. Because pointers variables are just normal variables, when the function ends, ptr will go out of scope. And because ptr is the only variable holding the address of the dynamically allocated integer, when ptr is destroyed there are no more references to the dynamically allocated memory. This means the program has now “lost” the address of the dynamically allocated memory. As a result, this dynamically allocated integer can not be deleted.**
+
+**This is called a memory leak. Memory leaks happen when your program loses the address of some bit of dynamically allocated memory before giving it back to the operating system.** When this happens, your program can’t delete the dynamically allocated memory, because it no longer knows where it is. The operating system also can’t use this memory, because that memory is considered to be still in use by your program.
+
+Memory leaks eat up free memory while the program is running, making less memory available not only to this program, but to other programs as well. Programs with severe memory leak problems can eat all the available memory, causing the entire machine to run slowly or even crash. Only after your program terminates is the operating system able to clean up and “reclaim” all leaked memory.
+
+Although memory leaks can result from a pointer going out of scope, there are other ways that memory leaks can result. For example, a memory leak can occur if a pointer holding the address of the dynamically allocated memory is assigned another value:
+~~~
+int value = 5;
+int* ptr{ new int{} }; // allocate memory
+ptr = &value; // old address lost, memory leak results
+~~~
+This can be fixed by deleting the pointer before reassigning it:
+~~~
+int value{ 5 };
+int* ptr{ new int{} }; // allocate memory
+delete ptr; // return memory back to operating system
+ptr = &value; // reassign pointer to address of value
+~~~
+
+Relatedly, it is also possible to get a memory leak via double-allocation:
+~~~
+int* ptr{ new int{} };
+ptr = new int{}; // old address lost, memory leak results
+~~~
+The address returned from the second allocation overwrites the address of the first allocation. Consequently, the first allocation becomes a memory leak!
+
+Similarly, this can be avoided by ensuring you delete the pointer before reassigning.
 
 # memory management
 [MIT lecture note](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-096-introduction-to-c-january-iap-2011/lecture-notes/)
