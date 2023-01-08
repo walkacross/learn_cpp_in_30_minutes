@@ -1,3 +1,6 @@
+# What is the difference between a strongly typed language and a statically typed language?
+> https://stackoverflow.com/questions/2690544/what-is-the-difference-between-a-strongly-typed-language-and-a-statically-typed
+
 # seperation of header and source file.
 [C++ Header File Guidelines](http://websites.umich.edu/~eecs381/handouts/CppHeaderFileGuidelines.pdf)
 
