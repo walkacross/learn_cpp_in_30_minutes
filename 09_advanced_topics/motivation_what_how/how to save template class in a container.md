@@ -1,6 +1,8 @@
 # how to save template class in a container ?
 > https://stackoverflow.com/questions/39105623/storing-classes-inherited-of-a-class-template-in-a-c-vector
 
+> https://stackoverflow.com/questions/16527673/c-one-stdvector-containing-template-class-of-multiple-types
+
 First, you could define a common non template ancestor:
 ~~~
 class MyCommonAncestor {
