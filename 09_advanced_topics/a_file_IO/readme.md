@@ -25,6 +25,9 @@ int main () {
 ~~~
 
 # 2 output with file
+
+> https://www.udacity.com/blog/2021/05/how-to-read-from-a-file-in-cpp.html
+
 ~~~
 // reading a text file
 #include <iostream>
