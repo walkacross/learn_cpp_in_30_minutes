@@ -25,6 +25,9 @@ int main () {
 ~~~
 
 # 2 output with file
+
+> https://www.udacity.com/blog/2021/05/how-to-read-from-a-file-in-cpp.html
+
 ~~~
 // reading a text file
 #include <iostream>
@@ -109,3 +112,19 @@ int main () {
   return 0;
 }
 ~~~
+
+
+# appendix
+
+## the relation between character and encoding
+https://stackoverflow.com/questions/4059157/when-encoding-actually-matters-e-g-string-storing-printing
+~~~
+Not quite. Make sure you understand one important distinction.
+
+A character is the minimum unit of text. A letter, digit, punctuation mark, symbol, space, etc.
+A byte is the minimum unit of memory. On the overwhelming majority of computers, this is 8 bits.
+Encoding is converting a sequence of characters to a sequence of bytes. Decoding is converting a sequence of bytes to a sequence of characters.
+
+The confusing thing for C and C++ programmers is that char means byte, NOT character! The name char for the byte type is a legacy from the pre-Unicode days when everyone (except East Asians) used single-byte encodings. But nowadays, we have Unicode, and its encoding schemes which have up to 4 bytes per character.
+~~~
+

@@ -1603,7 +1603,10 @@ Unlike std::unique_ptr, which uses a single pointer internally, std::shared_ptr 
 This also explains why independently creating two std::shared_ptr pointed to the same resource gets us into trouble. Each std::shared_ptr will have one pointer pointing at the resource. However, each std::shared_ptr will independently allocate its own control block, which will indicate that it is the only pointer owning that resource. Thus, when that std::shared_ptr goes out of scope, it will deallocate the resource, not realizing there are other std::shared_ptr also trying to manage that resource.
 
 However, when a std::shared_ptr is cloned using copy assignment, the data in the control block can be appropriately updated to indicate that there are now additional std::shared_ptr co-managing the resource.
-  
+ 
+## appendix1: Custom Deleters for C++ Smart Pointers
+> https://www.cppstories.com/2016/04/custom-deleters-for-c-smart-pointers/
+	
 # reference
 	
 https://www.learncpp.com/cpp-tutorial/intro-to-smart-pointers-move-semantics/	
